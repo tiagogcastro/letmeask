@@ -18,8 +18,7 @@ yarn start              # http://localhost:3000
 yarn build              # production build
 ```
 
-Deployment config for Firebase Hosting lives in `firebase.json`;
-database security rules in `database.rules.json`.
+Database security rules live in `database.rules.json`.
 
 ## Structure
 

@@ -40,7 +40,6 @@ yarn start              # http://localhost:3000
 
 Create a Firebase project with Google sign-in enabled and Realtime Database
 rules in place (`database.rules.json` documents the rules used here).
-Deployment config for Firebase Hosting ships in `firebase.json`.
 
 ## Legacy note
 
