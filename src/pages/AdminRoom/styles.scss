@@ -39,3 +39,15 @@
     }
   }
 }
+
+@media (max-width: 767px) {
+  #page-admin-room {
+    main {
+      padding: 0 16px;
+
+      .details {
+        margin-top: 24px;
+      }
+    }
+  }
+}

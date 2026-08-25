@@ -27,6 +27,20 @@
     word-break: break-word;
   }
 
+  @media (max-width: 767px) {
+    padding: 16px;
+
+    footer {
+      flex-wrap: wrap;
+      gap: 12px;
+
+      > div {
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+    }
+  }
+
   footer {
     display: flex;
     justify-content: space-between;
