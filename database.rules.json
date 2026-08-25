@@ -1,18 +1,27 @@
 {
   "rules": {
     "rooms": {
-      ".read": false,
-      ".write": "auth != null",
+      ".read": true,
       "$roomId": {
-       	".read": true,
-        ".write": " auth != null && (!data.exists() || data.child('authorId').val() == auth.id)",
+        ".write": "auth != null && (!data.exists() || data.child('author/id').val() === auth.uid)",
+        "title": {
+          ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 60"
+        },
         "questions": {
-          ".read": true,
-            ".write": "auth != null && (!data.exists() || data.parent().child('authorId').val() == auth.id)",
+          "$questionId": {
+            ".write": "auth != null && ((!data.exists() && root.child('rooms').child($roomId).child('endedAt').val() === false) || root.child('rooms').child($roomId).child('author/id').val() === auth.uid)",
+            "content": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 400"
+            },
             "likes": {
-              ".read": true,
-              ".write": " auth != null && (!data.exists() || data.child('authorId').val() == auth.id)"
+              "$likeId": {
+                ".write": "auth != null && ((!data.exists() && root.child('rooms').child($roomId).child('endedAt').val() === false) || data.child('authorId').val() === auth.uid)",
+                "authorId": {
+                  ".validate": "newData.val() === auth.uid"
+                }
+              }
             }
+          }
         }
       }
     }

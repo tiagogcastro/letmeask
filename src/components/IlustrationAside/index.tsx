@@ -1,4 +1,4 @@
-import illustrationImg from '../../assets/images/illustration.svg';
+import illustrationImg from '@/assets/images/illustration.svg';
 
 import './styles.scss';
 

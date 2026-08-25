@@ -1,49 +1,57 @@
 import { useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { database } from '../../services/firebase';
-import { useRoom } from '../../hooks/useRoom';
-import { useAuth } from '../../hooks/useAuth';
+import { useNavigate, useParams } from 'react-router-dom';
+import { ref, remove, update } from 'firebase/database';
+import { database } from '@/services/firebase';
+import { useRoom } from '@/hooks/useRoom';
+import { useAuth } from '@/hooks/useAuth';
 
-import { Button } from '../../components/Button';
-import { Question } from '../../components/Question';
-import { RoomCode } from '../../components/RoomCode';
-import { Header } from '../../components/Header';
-import { UserInfo } from '../../components/UserInfo';
+import { Button } from '@/components/Button';
+import { Question } from '@/components/Question';
+import { RoomCode } from '@/components/RoomCode';
+import { Header } from '@/components/Header';
+import { UserInfo } from '@/components/UserInfo';
 
-import deleteImg from '../../assets/images/delete.svg';
-import checkImg from '../../assets/images/check.svg';
-import answerImg from '../../assets/images/answer.svg';
+import deleteImg from '@/assets/images/delete.svg';
+import checkImg from '@/assets/images/check.svg';
+import answerImg from '@/assets/images/answer.svg';
 
 import './styles.scss';
 
-type RoomParams = {
-  id: string;
-}
-
 export function AdminRoom() {
-  const { user } = useAuth();
-  const params = useParams<RoomParams>();
-  const history = useHistory();
-  const roomId = params.id;
+  const { user, isAuthChecked } = useAuth();
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const roomId = id ?? '';
   const { questions, title, adminId } = useRoom(roomId);
 
   useEffect(() => {
-    if (user?.id === null || (adminId !== '' && adminId !== user?.id)) {
-      history.push(`/rooms/${roomId}`)
+    if(!isAuthChecked) {
+      return;
     }
-  }, [user, history, adminId, roomId])
+
+    if(!user) {
+      navigate(`/rooms/${roomId}`);
+      return;
+    }
+
+    const roomLoaded = adminId !== '';
+
+    if(roomLoaded && user.id !== adminId) {
+      navigate(`/rooms/${roomId}`);
+    }
+  }, [isAuthChecked, user, adminId, navigate, roomId]);
 
 
   async function handleEndRoom() {
-    await database.ref(`rooms/${roomId}`).update({
+    await update(ref(database, `rooms/${roomId}`), {
       endedAt: true
     });
 
-    history.push('/rooms/me');
+    navigate('/rooms/me');
   }
 
   async function handleCheckQuestionAsAnswered(questionId: string) {
-    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+    await update(ref(database, `rooms/${roomId}/questions/${questionId}`), {
       isAnswered: true,
       isHighLighted: false,
     });
@@ -51,11 +59,11 @@ export function AdminRoom() {
 
   async function handleHighlightQuestion(questionId: string, isHighLighted: boolean) {
     if(isHighLighted) {
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      await update(ref(database, `rooms/${roomId}/questions/${questionId}`), {
         isHighLighted: false,
       });
     } else {
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      await update(ref(database, `rooms/${roomId}/questions/${questionId}`), {
         isHighLighted: true,
       });
     }
@@ -63,7 +71,7 @@ export function AdminRoom() {
 
   async function handleDeleteQuestion(questionId: string) {
     if(window.confirm('Tem certeza que deseja excluir esta pergunta?')) {
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
+      await remove(ref(database, `rooms/${roomId}/questions/${questionId}`));
     }
   }
 
@@ -75,7 +83,7 @@ export function AdminRoom() {
             avatar={user?.avatar}
             name={user?.name}
           />
-          <Button onClick={() => history.push('/rooms/me')}>Minhas salas</Button>
+          <Button onClick={() => navigate('/rooms/me')}>Minhas salas</Button>
           <Button 
             onClick={handleEndRoom} 
             isOutlined

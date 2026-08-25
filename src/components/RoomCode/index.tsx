@@ -1,4 +1,4 @@
-import copyImg from '../../assets/images/copy.svg';
+import copyImg from '@/assets/images/copy.svg';
 
 import './styles.scss';
 

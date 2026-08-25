@@ -12,3 +12,16 @@ body {
 body, input, button, textarea {
   font: 400 16px 'Roboto', sans-serif;
 }
+
+.form-error {
+  display: block;
+
+  margin-top: 8px;
+  color: #e83f5b;
+  font-size: 14px;
+}
+
+button:disabled.like-button {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

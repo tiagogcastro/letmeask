@@ -1,14 +1,17 @@
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
-import deleteImg from '../../assets/images/delete.svg';
+import deleteImg from '@/assets/images/delete.svg';
 
 import './styles.scss';
-import { useAuth } from '../../hooks/useAuth';
-import { database } from '../../services/firebase';
 import { useEffect, useState } from 'react';
-import { Button } from '../../components/Button';
-import { UserInfo } from '../../components/UserInfo';
-import { Header } from '../../components/Header';
+import type { FormEvent } from 'react';
+import { onValue, ref, remove, update } from 'firebase/database';
+
+import { useAuth } from '@/hooks/useAuth';
+import { database } from '@/services/firebase';
+import { Button } from '@/components/Button';
+import { UserInfo } from '@/components/UserInfo';
+import { Header } from '@/components/Header';
 
 type FirebaseMeRooms = {
   id: string;
@@ -24,18 +27,19 @@ type FirebaseMeRooms = {
 export function RoomsMe() {
   const { user } = useAuth();
   const [meRooms, setMeRooms] = useState<FirebaseMeRooms[]>([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const roomRef = database.ref(`rooms`);
+    const roomsRef = ref(database, 'rooms');
 
-    roomRef.on('value', async () => {
-      const rooms: FirebaseMeRooms[] = (await roomRef.get()).val();
+    const unsubscribe = onValue(roomsRef, roomsSnapshot => {
+      const rooms = roomsSnapshot.val() as Record<string, Omit<FirebaseMeRooms, 'id'>> | null;
 
       if(!rooms) {
         setMeRooms([]);
         return;
       }
+
       const parsedRooms = Object.entries(rooms).map(([key, value]) => {
         return {
           id: key,
@@ -46,29 +50,29 @@ export function RoomsMe() {
       });
 
       const roomsFiltered = parsedRooms.filter(result => result.author.id === user?.id)
-      
-      setMeRooms(roomsFiltered);
 
+      setMeRooms(roomsFiltered);
     });
 
     return () => {
-      roomRef.off('value');
+      unsubscribe();
     };
- 
+
   }, [user?.id]);
 
-  async function handleOpenRoom(roomId: string) {
+  function handleOpenRoom(event: FormEvent, roomId: string) {
+    event.preventDefault();
 
-    await database.ref(`rooms/${roomId}`).update({
+    void update(ref(database, `rooms/${roomId}`), {
       endedAt: false,
     });
 
-    history.push(`/admin/rooms/${roomId}`);
+    navigate(`/admin/rooms/${roomId}`);
   }
 
   async function handleDeleteRoom(roomId: string) {
     if(window.confirm('Tem certeza que deseja excluir esta sala?')) {
-      await database.ref(`rooms/${roomId}`).remove();
+      await remove(ref(database, `rooms/${roomId}`));
     }
   }
 
@@ -76,7 +80,7 @@ export function RoomsMe() {
     <div id="page-roomsMe">
       <Header>
         <div className="infos">
-          <UserInfo 
+          <UserInfo
             avatar={user?.avatar}
             name={user?.name}
           />
@@ -99,7 +103,7 @@ export function RoomsMe() {
             {meRooms.length > 0 && (<h2>Total de salas: <span> {meRooms.length} </span></h2>)}
           </div>
         </div>
-        
+
         {meRooms.map(room => (
           <div className="room" key={room.id}>
             <h1>{room.title}</h1>
@@ -113,7 +117,7 @@ export function RoomsMe() {
                 <img src={deleteImg} alt="Remover sala" />
               </button>
               {room.endedAt ? (
-                <Button onClick={() => handleOpenRoom(room.id)} type="button">
+                <Button onClick={(event) => handleOpenRoom(event, room.id)} type="button">
                   Abrir a sala
                 </Button>
               ) : (
@@ -123,7 +127,7 @@ export function RoomsMe() {
                   </Button>
                 </Link>
               )}
-              
+
             </div>
           </div>
         ))}

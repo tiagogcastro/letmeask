@@ -25,3 +25,9 @@ aside {
     color: #f8f8f8;
   }
 }
+
+@media (max-width: 767px) {
+  aside {
+    display: none;
+  }
+}
