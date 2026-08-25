@@ -19,6 +19,7 @@ and modernized in 2026 on Node 22 with every dependency current.
 <p>
   <img src=".github/screenshots/home-mobile.png" alt="Mobile home" width="240" />
   <img src=".github/screenshots/room-audience-mobile.png" alt="Mobile room" width="240" />
+  <img src=".github/screenshots/all-rooms-mobile.png" alt="Mobile room discovery" width="240" />
 </p>
 
 ## Features
@@ -74,6 +75,13 @@ npm run dev       # with VITE_USE_EMULATORS="true" in .env
 
 The app detects `VITE_USE_EMULATORS="true"` and attaches to the local
 emulators. Sign in with any account through the emulator popup window.
+
+| Emulator Suite UI: Realtime Database | Emulator Suite UI: Authentication |
+|---|---|
+| ![Emulator database](.github/screenshots/emulator-database.png) | ![Emulator auth](.github/screenshots/emulator-auth.png) |
+
+Security rules run inside the emulator too: writes without a matching owner
+or an authenticated session are rejected exactly like in production.
 
 ### Quality gates
 

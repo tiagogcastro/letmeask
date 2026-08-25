@@ -36,3 +36,21 @@
     }
   }
 }
+
+@media (max-width: 767px) {
+  .header {
+    padding: 16px;
+
+    .content {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+
+      > div {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+      }
+    }
+  }
+}

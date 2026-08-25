@@ -74,3 +74,20 @@
     }
   }
 }
+
+@media (max-width: 767px) {
+  #page-room {
+    main {
+      padding: 0 16px;
+
+      .room-title {
+        margin-top: 24px;
+      }
+
+      form .form-footer {
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+    }
+  }
+}

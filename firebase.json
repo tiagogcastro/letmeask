@@ -1,4 +1,7 @@
 {
+  "projects": {
+    "default": "demo-letmeask"
+  },
   "database": {
     "rules": "database.rules.json"
   },

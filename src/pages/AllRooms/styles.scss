@@ -49,3 +49,24 @@
     }
   }
 }
+
+@media (max-width: 767px) {
+  #page-allRooms {
+    main {
+      padding: 0 16px;
+    }
+
+    .rooms {
+      grid-template-columns: 1fr;
+      margin-top: 24px;
+
+      .room {
+        > div {
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 12px;
+        }
+      }
+    }
+  }
+}
