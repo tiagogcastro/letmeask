@@ -5,6 +5,7 @@ import {
   GoogleAuthProvider,
   onAuthStateChanged,
   signInWithPopup,
+  signOut,
 } from 'firebase/auth';
 
 import { auth } from '../services/firebase';
@@ -17,6 +18,7 @@ type User = {
 
 type AuthContextType = {
   user: User | undefined;
+  isAuthChecked: boolean;
   signInWithGoogle: () => Promise<void>,
 }
 
@@ -28,6 +30,7 @@ export const AuthContext = createContext({} as AuthContextType);
 
 export function AuthContextProvider(props: AuthContextProviderProps) {
   const [user, setUser] = useState<User>();
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, firebaseUser => {
@@ -35,15 +38,18 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
         const { displayName, photoURL, uid } = firebaseUser;
 
         if(!displayName || !photoURL) {
-          throw new Error('Missing information from Google Account');
+          void signOut(auth);
+          setUser(undefined);
+        } else {
+          setUser({
+            id: uid,
+            name: displayName,
+            avatar: photoURL
+          });
         }
-
-        setUser({
-          id: uid,
-          name: displayName,
-          avatar: photoURL
-        });
       }
+
+      setIsAuthChecked(true);
     });
 
     return () => {
@@ -61,7 +67,8 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
       const { displayName, photoURL, uid } = result.user;
 
       if(!displayName || !photoURL) {
-        throw new Error('Missing information from Google Account');
+        await signOut(auth);
+        return;
       }
 
       setUser({
@@ -73,7 +80,7 @@ export function AuthContextProvider(props: AuthContextProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, signInWithGoogle }}>
+    <AuthContext.Provider value={{ user, isAuthChecked, signInWithGoogle }}>
       {props.children}
     </AuthContext.Provider>
   );

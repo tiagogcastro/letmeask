@@ -50,6 +50,10 @@ export function Room() {
   }
 
   async function handleLikeQuestion(questionId: string, likeId: string | undefined) {
+    if(!user) {
+      return;
+    }
+
     if(likeId) {
       await remove(ref(database, `rooms/${roomId}/questions/${questionId}/likes/${likeId}`));
     } else {
@@ -134,10 +138,11 @@ export function Room() {
                 <span className="text-answered">Respondida</span>
               )}
               {!question.isAnswered && (
-                <button 
+                <button
                   className={`like-button ${question.likeId ? 'liked': ''}`}
                   type="button"
                   aria-label="Marcar como gostei"
+                  disabled={!user}
                   onClick={() => handleLikeQuestion(question.id, question.likeId)}
                 >
                   { question.likeCount > 0 && <span>{question.likeCount}</span> }

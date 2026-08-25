@@ -97,7 +97,7 @@ export function AllRooms() {
                   name={room.author.name}
                   avatar={room.author.avatar}
                 />
-                <Link to={`rooms/${room.id}`}>
+                <Link to={`/rooms/${room.id}`}>
                   <Button>Entrar na sala</Button>
                 </Link>
               </div>

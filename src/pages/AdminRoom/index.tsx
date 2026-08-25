@@ -18,17 +18,23 @@ import answerImg from '../../assets/images/answer.svg';
 import './styles.scss';
 
 export function AdminRoom() {
-  const { user } = useAuth();
+  const { user, isAuthChecked } = useAuth();
   const { id } = useParams();
   const navigate = useNavigate();
   const roomId = id ?? '';
   const { questions, title, adminId } = useRoom(roomId);
 
   useEffect(() => {
-    if (user?.id === null || (adminId !== '' && adminId !== user?.id)) {
-      navigate(`/rooms/${roomId}`)
+    if(!isAuthChecked) {
+      return;
     }
-  }, [user, navigate, adminId, roomId])
+
+    const isOwner = adminId !== '' && user?.id === adminId;
+
+    if(!user || !isOwner) {
+      navigate(`/rooms/${roomId}`);
+    }
+  }, [isAuthChecked, user, adminId, navigate, roomId]);
 
 
   async function handleEndRoom() {
