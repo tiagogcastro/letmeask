@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { get, ref } from 'firebase/database';
 import { database } from '../../services/firebase';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -33,14 +34,14 @@ export function Home() {
       return;
     }
 
-    const roomRef = await database.ref(`rooms/${roomCode}`).get();
+    const roomSnapshot = await get(ref(database, `rooms/${roomCode}`));
 
-    if(!roomRef.exists()) {
+    if(!roomSnapshot.exists()) {
       alert('Room does not exist');
       return;
     } 
 
-    if(roomRef.val().endedAt) {
+    if(roomSnapshot.val().endedAt) {
       alert('Room already closed.');
       return;
     }

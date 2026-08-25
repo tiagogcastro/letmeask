@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { push, ref } from 'firebase/database';
 import { database } from '../../services/firebase';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -31,9 +32,7 @@ export function NewRoom() {
       return;
     }
 
-    const roomRef = database.ref('rooms');
-
-    const firebaseRoom = await roomRef.push({
+    const newRoomRef = await push(ref(database, 'rooms'), {
       title: newRoom,
       author: {
         id: user?.id,
@@ -41,10 +40,9 @@ export function NewRoom() {
       avatar: user?.avatar
       },
       endedAt: false,
-      questionCount: 0, 
     });
-    
-    navigate(`/admin/rooms/${firebaseRoom.key}`);
+
+    navigate(`/admin/rooms/${newRoomRef.key}`);
   }
   
   return (

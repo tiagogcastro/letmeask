@@ -1,6 +1,7 @@
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { push, ref, remove } from 'firebase/database';
 import { database } from '../../services/firebase';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -43,16 +44,16 @@ export function Room() {
       isAnswered: false,
     };
 
-    await database.ref(`rooms/${roomId}/questions`).push(question);
+    await push(ref(database, `rooms/${roomId}/questions`), question);
 
     setNewQuestion('');
   }
 
   async function handleLikeQuestion(questionId: string, likeId: string | undefined) {
     if(likeId) {
-      await database.ref(`rooms/${roomId}/questions/${questionId}/likes/${likeId}`).remove();
+      await remove(ref(database, `rooms/${roomId}/questions/${questionId}/likes/${likeId}`));
     } else {
-      await database.ref(`rooms/${roomId}/questions/${questionId}/likes`).push({
+      await push(ref(database, `rooms/${roomId}/questions/${questionId}/likes`), {
         authorId: user?.id,
       });
     }

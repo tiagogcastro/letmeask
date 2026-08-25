@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { ref, remove, update } from 'firebase/database';
 import { database } from '../../services/firebase';
 import { useRoom } from '../../hooks/useRoom';
 import { useAuth } from '../../hooks/useAuth';
@@ -31,7 +32,7 @@ export function AdminRoom() {
 
 
   async function handleEndRoom() {
-    await database.ref(`rooms/${roomId}`).update({
+    await update(ref(database, `rooms/${roomId}`), {
       endedAt: true
     });
 
@@ -39,7 +40,7 @@ export function AdminRoom() {
   }
 
   async function handleCheckQuestionAsAnswered(questionId: string) {
-    await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+    await update(ref(database, `rooms/${roomId}/questions/${questionId}`), {
       isAnswered: true,
       isHighLighted: false,
     });
@@ -47,11 +48,11 @@ export function AdminRoom() {
 
   async function handleHighlightQuestion(questionId: string, isHighLighted: boolean) {
     if(isHighLighted) {
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      await update(ref(database, `rooms/${roomId}/questions/${questionId}`), {
         isHighLighted: false,
       });
     } else {
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).update({
+      await update(ref(database, `rooms/${roomId}/questions/${questionId}`), {
         isHighLighted: true,
       });
     }
@@ -59,7 +60,7 @@ export function AdminRoom() {
 
   async function handleDeleteQuestion(questionId: string) {
     if(window.confirm('Tem certeza que deseja excluir esta pergunta?')) {
-      await database.ref(`rooms/${roomId}/questions/${questionId}`).remove();
+      await remove(ref(database, `rooms/${roomId}/questions/${questionId}`));
     }
   }
 

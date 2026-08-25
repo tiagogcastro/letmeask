@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { onValue, ref } from 'firebase/database';
+
 import { Button } from '../../components/Button';
 import { Header } from '../../components/Header';
 import { UserInfo } from '../../components/UserInfo';
@@ -31,33 +33,41 @@ type DatabaseRoomType = {
   };
   questions?: FirebaseQuestions;
   endedAt: boolean,
-  questionCount: number,
 }
 
 export function AllRooms() {
   const { user, signInWithGoogle } = useAuth();
   const [rooms, setRooms] = useState<DatabaseRoomType[]>([]);
-  
-  useEffect(() => {
-    const roomsRef = database.ref('rooms');
 
-    roomsRef.on('value', async (rooms) => {
-      const databaseRooms: DatabaseRoomType[] = rooms.val() ?? {};
-      
+  useEffect(() => {
+    const roomsRef = ref(database, 'rooms');
+
+    const unsubscribe = onValue(roomsRef, roomsSnapshot => {
+      const databaseRooms = roomsSnapshot.val() as Record<string, Omit<DatabaseRoomType, 'id'>> | null;
+
+      if(!databaseRooms) {
+        setRooms([]);
+        return;
+      }
+
       const roomsParsed = Object.entries(databaseRooms).map(([key, value]) => {
         return {
           id: key,
           title: value.title,
           author: value.author,
           endedAt: value.endedAt,
-          questionCount: Object.entries(value.questions ?? {}).length,
         };
       }).filter(where => where.author.id !== user?.id && where.endedAt !== true);
 
       setRooms(roomsParsed);
     });
+
+    return () => {
+      unsubscribe();
+    };
+
   }, [user?.id]);
-  
+
   return (
     <div id="page-allRooms">
       <Header>
@@ -66,7 +76,7 @@ export function AllRooms() {
           <Link to="/rooms/me">
             <Button>Minhas salas</Button>
           </Link>
-          <UserInfo 
+          <UserInfo
             avatar={user.avatar}
             name={user.name}
           />
