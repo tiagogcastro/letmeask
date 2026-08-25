@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { database } from '../../services/firebase';
 import { useRoom } from '../../hooks/useRoom';
 import { useAuth } from '../../hooks/useAuth';
@@ -16,22 +16,18 @@ import answerImg from '../../assets/images/answer.svg';
 
 import './styles.scss';
 
-type RoomParams = {
-  id: string;
-}
-
 export function AdminRoom() {
   const { user } = useAuth();
-  const params = useParams<RoomParams>();
-  const history = useHistory();
-  const roomId = params.id;
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const roomId = id ?? '';
   const { questions, title, adminId } = useRoom(roomId);
 
   useEffect(() => {
     if (user?.id === null || (adminId !== '' && adminId !== user?.id)) {
-      history.push(`/rooms/${roomId}`)
+      navigate(`/rooms/${roomId}`)
     }
-  }, [user, history, adminId, roomId])
+  }, [user, navigate, adminId, roomId])
 
 
   async function handleEndRoom() {
@@ -39,7 +35,7 @@ export function AdminRoom() {
       endedAt: true
     });
 
-    history.push('/rooms/me');
+    navigate('/rooms/me');
   }
 
   async function handleCheckQuestionAsAnswered(questionId: string) {
@@ -75,7 +71,7 @@ export function AdminRoom() {
             avatar={user?.avatar}
             name={user?.name}
           />
-          <Button onClick={() => history.push('/rooms/me')}>Minhas salas</Button>
+          <Button onClick={() => navigate('/rooms/me')}>Minhas salas</Button>
           <Button 
             onClick={handleEndRoom} 
             isOutlined

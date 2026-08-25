@@ -1,4 +1,4 @@
-import { useParams, useHistory, Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { database } from '../../services/firebase';
@@ -14,15 +14,11 @@ import './styles.scss';
 import { UserInfo } from '../../components/UserInfo';
 import { Header } from '../../components/Header';
 
-type RoomParams = {
-  id: string;
-}
-
 export function Room() {
   const { user, signInWithGoogle } = useAuth();
-  const history = useHistory();
-  const params = useParams<RoomParams>();
-  const roomId = params.id;
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const roomId = id ?? '';
   const { questions, title } = useRoom(roomId);
 
   const [newQuestion, setNewQuestion] = useState('');
@@ -67,7 +63,7 @@ export function Room() {
       await signInWithGoogle()
     }
 
-    history.push(`/rooms/${roomId}`);
+    navigate(`/rooms/${roomId}`);
   }
 
 
@@ -76,7 +72,7 @@ export function Room() {
       <Header>
         <div>
           {user ? (
-          <Button onClick={() => history.push('/rooms/me')}>Minhas salas</Button>
+          <Button onClick={() => navigate('/rooms/me')}>Minhas salas</Button>
           ) : (
             <Link to={`/rooms`}>
               <Button type="button">

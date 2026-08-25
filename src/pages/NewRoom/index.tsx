@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { database } from '../../services/firebase';
 
 import { useAuth } from '../../hooks/useAuth';
@@ -16,11 +16,11 @@ import './styles.scss';
 export function NewRoom() {
   const { user } = useAuth();
   const [newRoom, setNewRoom] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
-      history.push(`/`);
+      navigate(`/`);
     }
   }, [user]);
 
@@ -44,7 +44,7 @@ export function NewRoom() {
       questionCount: 0, 
     });
     
-    history.push(`/admin/rooms/${firebaseRoom.key}`);
+    navigate(`/admin/rooms/${firebaseRoom.key}`);
   }
   
   return (

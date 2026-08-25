@@ -1,4 +1,4 @@
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import deleteImg from '../../assets/images/delete.svg';
 
@@ -24,7 +24,7 @@ type FirebaseMeRooms = {
 export function RoomsMe() {
   const { user } = useAuth();
   const [meRooms, setMeRooms] = useState<FirebaseMeRooms[]>([]);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const roomRef = database.ref(`rooms`);
@@ -63,7 +63,7 @@ export function RoomsMe() {
       endedAt: false,
     });
 
-    history.push(`/admin/rooms/${roomId}`);
+    navigate(`/admin/rooms/${roomId}`);
   }
 
   async function handleDeleteRoom(roomId: string) {
