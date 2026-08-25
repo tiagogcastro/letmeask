@@ -1,4 +1,5 @@
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { database } from '../../services/firebase';
 

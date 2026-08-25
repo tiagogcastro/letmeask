@@ -1,5 +1,6 @@
 import { useParams, useHistory, Link } from 'react-router-dom';
-import { FormEvent, useState } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import { database } from '../../services/firebase';
 
 import { useAuth } from '../../hooks/useAuth';
