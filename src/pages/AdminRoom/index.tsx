@@ -29,9 +29,14 @@ export function AdminRoom() {
       return;
     }
 
-    const isOwner = adminId !== '' && user?.id === adminId;
+    if(!user) {
+      navigate(`/rooms/${roomId}`);
+      return;
+    }
 
-    if(!user || !isOwner) {
+    const roomLoaded = adminId !== '';
+
+    if(roomLoaded && user.id !== adminId) {
       navigate(`/rooms/${roomId}`);
     }
   }, [isAuthChecked, user, adminId, navigate, roomId]);

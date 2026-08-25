@@ -11,7 +11,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit",
-    "sandbox": "firebase-tools emulators:start --only auth,database --import .emulator-data --export-on-exit"
+    "sandbox": "firebase emulators:start --only auth,database --import .emulator-data --export-on-exit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
