@@ -10,7 +10,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "sandbox": "firebase-tools emulators:start --only auth,database --import .emulator-data --export-on-exit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
@@ -26,6 +27,7 @@
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.5",
     "@vitejs/plugin-react": "^6.1.0",
+    "firebase-tools": "^15.28.1",
     "sass": "^1.103.1",
     "typescript": "^7.0.2",
     "vite": "^8.2.2"
