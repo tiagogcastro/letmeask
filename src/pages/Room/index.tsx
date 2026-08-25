@@ -5,17 +5,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { push, ref, remove } from 'firebase/database';
 
-import { useAuth } from '../../hooks/useAuth';
-import { useRoom } from '../../hooks/useRoom';
-import { database } from '../../services/firebase';
+import { useAuth } from '@/hooks/useAuth';
+import { useRoom } from '@/hooks/useRoom';
+import { database } from '@/services/firebase';
 
-import { Button } from '../../components/Button';
-import { RoomCode } from '../../components/RoomCode';
-import { Question } from '../../components/Question';
+import { Button } from '@/components/Button';
+import { RoomCode } from '@/components/RoomCode';
+import { Question } from '@/components/Question';
 
 import './styles.scss';
-import { UserInfo } from '../../components/UserInfo';
-import { Header } from '../../components/Header';
+import { UserInfo } from '@/components/UserInfo';
+import { Header } from '@/components/Header';
 
 const questionFormSchema = z.object({
   content: z

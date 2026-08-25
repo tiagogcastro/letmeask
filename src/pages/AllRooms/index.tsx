@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { onValue, ref } from 'firebase/database';
 
-import { Button } from '../../components/Button';
-import { Header } from '../../components/Header';
-import { UserInfo } from '../../components/UserInfo';
-import { useAuth } from '../../hooks/useAuth';
-import { database } from '../../services/firebase';
+import { Button } from '@/components/Button';
+import { Header } from '@/components/Header';
+import { UserInfo } from '@/components/UserInfo';
+import { useAuth } from '@/hooks/useAuth';
+import { database } from '@/services/firebase';
 import './styles.scss';
 
 type FirebaseQuestions = Record<string, {

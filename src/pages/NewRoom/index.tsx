@@ -4,15 +4,15 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { push, ref } from 'firebase/database';
-import { database } from '../../services/firebase';
+import { database } from '@/services/firebase';
 
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
-import { Button } from '../../components/Button';
-import { IllustrationAside } from '../../components/IlustrationAside';
-import { UserInfo } from '../../components/UserInfo';
+import { Button } from '@/components/Button';
+import { IllustrationAside } from '@/components/IlustrationAside';
+import { UserInfo } from '@/components/UserInfo';
 
-import logoImg from '../../assets/images/logo.svg';
+import logoImg from '@/assets/images/logo.svg';
 
 import './styles.scss';
 

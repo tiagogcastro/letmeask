@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { onValue, ref } from 'firebase/database';
 
-import { database } from '../services/firebase';
+import { database } from '@/services/firebase';
 import { useAuth } from './useAuth';
 
 type FirebaseQuestions = Record<string, {

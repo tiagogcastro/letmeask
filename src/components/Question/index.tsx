@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import cxLib from 'classnames';
 
 import './styles.scss';
-import { UserInfo } from '../UserInfo';
+import { UserInfo } from '@/components/UserInfo';
 
 type QuestionProps = {
   content: string;

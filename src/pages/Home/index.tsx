@@ -4,15 +4,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 import { get, ref } from 'firebase/database';
-import { database } from '../../services/firebase';
+import { database } from '@/services/firebase';
 
-import { useAuth } from '../../hooks/useAuth';
+import { useAuth } from '@/hooks/useAuth';
 
-import { Button } from '../../components/Button';
-import { IllustrationAside } from '../../components/IlustrationAside';
+import { Button } from '@/components/Button';
+import { IllustrationAside } from '@/components/IlustrationAside';
 
-import logoImg from '../../assets/images/logo.svg';
-import googleIconImg from '../../assets/images/google-icon.svg';
+import logoImg from '@/assets/images/logo.svg';
+import googleIconImg from '@/assets/images/google-icon.svg';
 
 import './styles.scss';
 

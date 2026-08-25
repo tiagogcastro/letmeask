@@ -1,17 +1,17 @@
 import { Link, useNavigate } from 'react-router-dom';
 
-import deleteImg from '../../assets/images/delete.svg';
+import deleteImg from '@/assets/images/delete.svg';
 
 import './styles.scss';
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
 import { onValue, ref, remove, update } from 'firebase/database';
 
-import { useAuth } from '../../hooks/useAuth';
-import { database } from '../../services/firebase';
-import { Button } from '../../components/Button';
-import { UserInfo } from '../../components/UserInfo';
-import { Header } from '../../components/Header';
+import { useAuth } from '@/hooks/useAuth';
+import { database } from '@/services/firebase';
+import { Button } from '@/components/Button';
+import { UserInfo } from '@/components/UserInfo';
+import { Header } from '@/components/Header';
 
 type FirebaseMeRooms = {
   id: string;
