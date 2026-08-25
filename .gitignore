@@ -1,23 +1,27 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+node_modules/
 
-# testing
-/coverage
+# builds
+dist/
+build/
+coverage/
 
-# production
-/build
+# env files (Firebase web config stays out of git, see .env.example)
+.env
+.env.*
+!.env.example
 
-# misc
+# local tooling and scratch space
+tmp/
+.emulator-data/
+.firebase/
+firebase-debug.log*
+
+# logs
+*.log
+
+# editors and OS files
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+.idea/
+.vscode/*
+!.vscode/extensions.json
