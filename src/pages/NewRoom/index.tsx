@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
-import type { FormEvent } from 'react';
+import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { push, ref } from 'firebase/database';
 import { database } from '../../services/firebase';
 
@@ -14,10 +16,26 @@ import logoImg from '../../assets/images/logo.svg';
 
 import './styles.scss';
 
+const newRoomFormSchema = z.object({
+  title: z
+    .string()
+    .trim()
+    .min(1, 'Informe o nome da sala')
+    .max(40, 'O nome da sala deve ter no máximo 40 caracteres'),
+});
+
+type NewRoomFormData = z.infer<typeof newRoomFormSchema>;
+
 export function NewRoom() {
   const { user } = useAuth();
-  const [newRoom, setNewRoom] = useState('');
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<NewRoomFormData>({
+    resolver: zodResolver(newRoomFormSchema),
+  });
 
   useEffect(() => {
     if (!user) {
@@ -25,32 +43,26 @@ export function NewRoom() {
     }
   }, [user]);
 
-  async function handleCreateRoom(event: FormEvent) {
-    event.preventDefault();
-
-    if(newRoom.trim() === '') {
-      return;
-    }
-
+  async function handleCreateRoom({ title }: NewRoomFormData) {
     const newRoomRef = await push(ref(database, 'rooms'), {
-      title: newRoom,
+      title,
       author: {
         id: user?.id,
-      name: user?.name,
-      avatar: user?.avatar
+        name: user?.name,
+        avatar: user?.avatar,
       },
       endedAt: false,
     });
 
     navigate(`/admin/rooms/${newRoomRef.key}`);
   }
-  
+
   return (
     <div id="page-new-room">
       <IllustrationAside />
       <main>
         <header>
-          <UserInfo 
+          <UserInfo
             avatar={user?.avatar}
             name={user?.name}
           />
@@ -61,20 +73,22 @@ export function NewRoom() {
         <div className="main-content">
           <img src={logoImg} alt="Letmeask" />
           <h2>Criar uma nova sala</h2>
-          <form onSubmit={handleCreateRoom}>
-            <input 
+          <form onSubmit={handleSubmit(handleCreateRoom)}>
+            <input
               maxLength={40}
-              type="text" 
+              type="text"
               placeholder="Nome da sala"
-              onChange={event => setNewRoom(event.target.value)}
-              value={newRoom}
+              {...register('title')}
             />
+            {errors.title && (
+              <span className="form-error">{errors.title.message}</span>
+            )}
             <Button type="submit" disabled={!user}>
               Criar sala
             </Button>
           </form>
           <p>
-            Quer entrar em uma sala existente? 
+            Quer entrar em uma sala existente?
             <Link to="/"> Clique aqui</Link>
           </p>
         </div>
